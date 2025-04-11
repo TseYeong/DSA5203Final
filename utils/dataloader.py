@@ -35,7 +35,7 @@ def get_train_val_loaders(data_dir, val_ratio=0.2, batch_size=32):
     custom_classes = ['bedroom', 'Coast', 'Forest', 'Highway', 'industrial',
                       'Insidecity', 'kitchen', 'livingroom', 'Mountain', 'Office',
                       'OpenCountry', 'store', 'Street', 'Suburb', 'TallBuilding']
-    custom_class_to_index = {cls: i + 1 for i, cls in enumerate(custom_classes)}
+    custom_class_to_index = {cls: i for i, cls in enumerate(custom_classes)}
 
     dataset.class_to_idx = custom_class_to_index
     dataset.samples = [
