@@ -1,3 +1,5 @@
+import random
+import numpy as np
 import torch
 import matplotlib.pyplot as plt
 import torch.nn as nn
@@ -38,6 +40,15 @@ if __name__ == "__main__":
     parser.add_argument('--end_lr', type=float, default=10, help='Maximum learning rate (default: 10)')
     parser.add_argument('--num_iter', type=int, default=100, help='Number of iterations (default: 100)')
     opt = parser.parse_args()
+
+    SEED = 1234
+
+    random.seed(SEED)
+    np.random.seed(SEED)
+    torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
     find_lr(
         train_dir=opt.train_data_dir,
