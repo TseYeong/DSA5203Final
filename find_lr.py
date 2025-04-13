@@ -21,13 +21,25 @@ def find_lr(train_dir, depth=18, start_lr=1e-7, end_lr=10, num_iter=100):
     lr_finder = LRFinder(model, optimizer, criterion, device)
     lrs, losses = lr_finder.range_test(train_loader, end_lr=end_lr, num_iter=num_iter)
 
-    plt.plot(lrs, losses)
-    plt.xscale('log')
-    plt.xlabel('Learning Rate')
-    plt.ylabel('Smoothed Loss')
-    plt.title('LR Finder Curve')
-    plt.grid(True)
-    plt.savefig("lr_curve.png")
+    plot_lr_finder(lrs, losses)
+
+
+def plot_lr_finder(lrs, losses, skip_start=5, skip_end=5):
+    if skip_end == 0:
+        lrs = lrs[skip_start:]
+        losses = losses[skip_start:]
+    else:
+        lrs = lrs[skip_start:-skip_end]
+        losses = losses[skip_start:-skip_end]
+
+    fig = plt.figure(figsize=(16, 8))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(lrs, losses)
+    ax.set_xscale('log')
+    ax.set_xlabel('Learning rate')
+    ax.set_ylabel('Loss')
+    ax.grid(True, 'both', 'x')
+    plt.show()
 
 
 if __name__ == "__main__":
