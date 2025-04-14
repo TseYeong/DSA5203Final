@@ -114,4 +114,4 @@ def get_test_loader(data_dir, batch_size=32):
 
     test_loader = DataLoader(test_set, batch_size=batch_size)
 
-    return test_loader
+    return test_loader, custom_class_to_index
