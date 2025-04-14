@@ -3,28 +3,38 @@ import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
 from model.resnet import build_resnet
+from model.efficientnet import build_efficientnet
 from utils.dataloader import get_train_val_loaders
 from utils.eval import calculate_topk_accuracy
 
 
-def train(train_dir, model_path, depth=18, lr=1e-3, epochs=15, dropout=0.0):
+def train(train_dir, model_path, model, depth=18, lr=1e-3, epochs=15, dropout=0.0):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     train_loader, val_loader, classes = get_train_val_loaders(train_dir)
-    model = build_resnet(output_dim=len(classes), depth=depth, dropout=dropout).to(device)
+    if model == "efficientnet":
+        model = build_efficientnet(output_dim=len(classes)).to(device)
 
-    criterion = nn.CrossEntropyLoss().to(device)
+        params = [
+            {'params': model.stem.parameters(), 'lr': lr / 6},
+            {'params': model.blocks.parameters(), 'lr': lr / 2},
+            {'params': model.classifier.parameters()}
+        ]
+    else:
+        model = build_resnet(output_dim=len(classes), depth=depth, dropout=dropout).to(device)
 
-    params = [
-        {'params': model.conv1.parameters(), 'lr': lr / 10},
-        {'params': model.bn1.parameters(), 'lr': lr / 10},
-        {'params': model.layer1.parameters(), 'lr': lr / 8},
-        {'params': model.layer2.parameters(), 'lr': lr / 6},
-        {'params': model.layer3.parameters(), 'lr': lr / 4},
-        {'params': model.layer4.parameters(), 'lr': lr / 2},
-        {'params': model.fc.parameters()}
-    ]
+        params = [
+            {'params': model.conv1.parameters(), 'lr': lr / 10},
+            {'params': model.bn1.parameters(), 'lr': lr / 10},
+            {'params': model.layer1.parameters(), 'lr': lr / 8},
+            {'params': model.layer2.parameters(), 'lr': lr / 6},
+            {'params': model.layer3.parameters(), 'lr': lr / 4},
+            {'params': model.layer4.parameters(), 'lr': lr / 2},
+            {'params': model.fc.parameters()}
+        ]
+
     optimizer = optim.Adam(params, lr=lr)
+    criterion = nn.CrossEntropyLoss().to(device)
 
     STEPS_PER_EPOCH = len(train_loader)
     TOTAL_STEPS = epochs * STEPS_PER_EPOCH

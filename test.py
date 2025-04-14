@@ -1,15 +1,20 @@
 import torch
 from tqdm import tqdm
 from model.resnet import build_resnet
+from model.efficientnet import build_efficientnet
 from utils.dataloader import get_test_loader
 from utils.eval import calculate_topk_accuracy
 
 
-def test(test_dir, model_path, depth=18, dropout=0.0):
+def test(test_dir, model_path, model, depth=18, dropout=0.0):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     test_loader, classes = get_test_loader(test_dir)
-    model = build_resnet(len(classes), depth=depth, dropout=dropout).to(device)
+
+    if model == 'efficientnet':
+        model = build_efficientnet(len(classes)).to(device)
+    else:
+        model = build_resnet(len(classes), depth=depth, dropout=dropout).to(device)
 
     model.load_state_dict(torch.load(model_path, map_location=device))
     model.eval()
