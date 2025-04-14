@@ -1,6 +1,7 @@
 import torch
 from model.resnet import build_resnet
 from utils.dataloader import get_test_loader
+from utils.eval import calculate_topk_accuracy
 
 
 def test(test_dir, model_path):
@@ -19,7 +20,8 @@ def test(test_dir, model_path):
         for (images, labels) in test_loader:
             images, labels = images.to(device), labels.to(device)
             outputs, _ = model(images)
-            total_acc += (outputs.argmax(1) == labels).sum().item()
+            acc_1, _ = calculate_topk_accuracy(outputs, labels)
+            total_acc += acc_1.item()
 
     acc = total_acc / len(test_loader)
 
