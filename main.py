@@ -33,3 +33,7 @@ def main():
     else:
         acc = test(args.test_data_dir, args.model_path)
         print(f"Test acc: {acc:.4f}")
+
+
+if __name__ == "__main__":
+    main()
