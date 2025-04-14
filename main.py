@@ -25,13 +25,16 @@ def main():
     parser.add_argument('--model_path', default='./saved_models/resnet18.pth',
                         help='Path to save/load the model checkpoint.')
     parser.add_argument('--epochs', type=int, default=15, help='Number of training epochs')
+    parser.add_argument('--depth', type=int, default=18, help="ResNet depth")
+    parser.add_argument('--dropout', type=float, default=0.0, help="Dropout rate")
     args = parser.parse_args()
 
     if args.phase == 'train':
-        acc = train(args.train_data_dir, args.model_path, epochs=args.epochs)
+        acc = train(args.train_data_dir, args.model_path,
+                    depth=args.depth, epochs=args.epochs, dropout=args.dropout)
         print(f"Train acc: {acc:.4f}")
     else:
-        acc = test(args.test_data_dir, args.model_path)
+        acc = test(args.test_data_dir, args.model_path, depth=args.depth, dropout=args.dropout)
         print(f"Test acc: {acc:.4f}")
 
 
