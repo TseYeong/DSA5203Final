@@ -165,10 +165,7 @@ class EfficientNet(nn.Module):
         )
 
         self.avgpool = nn.AdaptiveAvgPool2d(1)
-        self.classifier = nn.Sequential(
-            nn.Dropout(p=0.2),
-            nn.Linear(adjust_channels(40), num_classes)
-        )
+        self.classifier = nn.Linear(adjust_channels(40), num_classes)
 
     def forward(self, x):
         """
