@@ -1,4 +1,6 @@
 import random
+import re
+
 import numpy as np
 import torch
 import argparse
@@ -22,19 +24,28 @@ def main():
                         help='Path to training data directory.')
     parser.add_argument('--test_data_dir', default='./data/test/',
                         help='Path to testing data directory.')
-    parser.add_argument('--model_path', default='./saved_models/resnet18.pth',
-                        help='Path to save/load the model checkpoint.')
+    parser.add_argument('--model', default='resnet18',
+                        choices=['resnet18', 'resnet34', 'resnet50', 'efficientnet'],
+                        help='Which model architecture to use.')
+    parser.add_argument('--lr', type=float, default=1e-3, help='Learning rate')
     parser.add_argument('--epochs', type=int, default=15, help='Number of training epochs')
-    parser.add_argument('--depth', type=int, default=18, help="ResNet depth")
     parser.add_argument('--dropout', type=float, default=0.0, help="Dropout rate")
     args = parser.parse_args()
 
+    model_path = './saved_models/' + args.model + '.pth'
+    if args.model != 'efficientnet':
+        pattern = re.compile(r'(\d+)')
+        match = pattern.search(args.model)
+        depth = int(match.group(1))
+    else:
+        depth = 0
+
     if args.phase == 'train':
-        acc = train(args.train_data_dir, args.model_path,
-                    depth=args.depth, epochs=args.epochs, dropout=args.dropout)
+        acc = train(args.train_data_dir, model_path, args.model,
+                    depth=depth, lr=args.lr, epochs=args.epochs, dropout=args.dropout)
         print(f"Train acc: {acc:.4f}")
     else:
-        acc = test(args.test_data_dir, args.model_path, depth=args.depth, dropout=args.dropout)
+        acc = test(args.test_data_dir, model_path, args.model, depth=depth, dropout=args.dropout)
         print(f"Test acc: {acc:.4f}")
 
 
