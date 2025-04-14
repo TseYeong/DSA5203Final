@@ -6,7 +6,7 @@ class ResNet(nn.Module):
     """
     A configurable ResNet architecture.
     """
-    def __init__(self, config, output_dim):
+    def __init__(self, config, output_dim, dropout_rate=0.0):
         """
         Args:
             config (tuple): (block, n_blocks, channels) configuration.
@@ -30,6 +30,7 @@ class ResNet(nn.Module):
         self.layer4 = self._make_layer(block, n_blocks[3], channels[3], stride=2)
 
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.dropout = nn.Dropout(dropout_rate) if dropout_rate > 0 else nn.Identity()
         self.fc = nn.Linear(self.in_channels, output_dim)
 
     def _make_layer(self, block, n_blocks, channels, stride=1):
@@ -72,6 +73,7 @@ class ResNet(nn.Module):
 
         x = self.avgpool(x)
         h = x.view(x.shape[0], -1)
+        h = self.dropout(h)
         x = self.fc(h)
 
         return x, h
@@ -188,14 +190,14 @@ class Bottleneck(nn.Module):
         return self.relu(out)
 
 
-def build_resnet(output_dim, depth=18):
+def build_resnet(output_dim, depth=18, dropout=0.0):
     """
     Factory function to build ResNet of varying depths.
 
     Args:
         output_dim (int): Number of output classes.
         depth (int): Depth of the ResNet, one of [18, 34, 50, 101].
-
+        dropout (float): Dropout rate
     Returns:
         ResNet: A ResNet model instance.
     """
@@ -210,4 +212,4 @@ def build_resnet(output_dim, depth=18):
     else:
         raise ValueError("Unsupported depth. Use one of: 18, 34, 50, 101")
 
-    return ResNet(config, output_dim)
+    return ResNet(config, output_dim, dropout)
