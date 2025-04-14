@@ -7,11 +7,11 @@ from utils.dataloader import get_train_val_loaders
 from utils.eval import calculate_topk_accuracy
 
 
-def train(train_dir, model_path, depth=18, lr=1e-3, epochs=15):
+def train(train_dir, model_path, depth=18, lr=1e-3, epochs=15, dropout=0.0):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     train_loader, val_loader, classes = get_train_val_loaders(train_dir)
-    model = build_resnet(output_dim=len(classes), depth=depth).to(device)
+    model = build_resnet(output_dim=len(classes), depth=depth, dropout=dropout).to(device)
 
     criterion = nn.CrossEntropyLoss().to(device)
 
