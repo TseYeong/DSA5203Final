@@ -59,7 +59,7 @@ python main.py \
 	--model resnet34 \
 	--lr 1e-3 \
 	--epochs 15 \
-	--dropout 0.2 \
+	--dropout 0.3 \
 ```
 
 Configs including: 
@@ -88,3 +88,11 @@ You need to train the model first before running the evaluation.
 | -------------------- |--------------------------------|
 | `efficientnet`       | Torch-based EfficientNet       |
 | `resnet18/34/50/101` | Torch-based ResNet18/34/50/101 |
+
+## Results
+
+| Model             | Train Top1 Acc | Train Loss | Test Top1 Acc | Test Loss | Dropout Rate |
+|------------------|------------------|------------------|------------------|------------------|------------------|
+| ResNet-18        | 89.56% | 0.354  | 76.77% | 0.684 | 0.1 |
+| ResNet-34 | 86.76% | 0.397 | 73.88% | 0.751 | 0.3 |
+| EfficientNet | 81.33% | 0.531 | 74.79% | 0.713 | 0.0 |
