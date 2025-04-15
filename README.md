@@ -6,7 +6,7 @@ This repository implements a lightweight and flexible PyTorch-based image classi
 
 ```
 .
-├── data/									# Image data organized by class folders
+├── data/			# Image data organized by class folders
 │   ├── train/           
 │   └── test/           
 ├── model/
@@ -22,10 +22,10 @@ This repository implements a lightweight and flexible PyTorch-based image classi
 │   ├── eval.py          	# Evaluation function (Top-K Accuracy)
 │   ├── lr_finder.py     	# Learning rate finder
 ├── find_lr.py           	# Script to find the best learning rate
-├── train.py							# Training
-├── test.py								# Evaluation
+├── train.py			# Training
+├── test.py			# Evaluation
 ├── main.py              	# Entry point for training/testing
-└── environment.yaml			# Environment configuration
+└── environment.yaml		# Environment configuration
 ```
 
 ## Getting started
@@ -84,7 +84,7 @@ You need to train the model first before running the evaluation.
 
 ## Model Options
 
-| Model Name           | Description                      |
-| -------------------- | -------------------------------- |
-| `efficientnet`       | Custom hand-written EfficientNet |
-| `resnet18/34/50/101` | Torch-style ResNet               |
+| Model Name           | Description                    |
+| -------------------- |--------------------------------|
+| `efficientnet`       | Torch-based EfficientNet       |
+| `resnet18/34/50/101` | Torch-based ResNet18/34/50/101 |
