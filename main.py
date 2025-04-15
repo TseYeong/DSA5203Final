@@ -25,7 +25,7 @@ def main():
     parser.add_argument('--test_data_dir', default='./data/test/',
                         help='Path to testing data directory.')
     parser.add_argument('--model', default='resnet18',
-                        choices=['resnet18', 'resnet34', 'resnet50', 'efficientnet'],
+                        choices=['resnet18', 'resnet34', 'resnet50', 'resnet101', 'efficientnet'],
                         help='Which model architecture to use.')
     parser.add_argument('--lr', type=float, default=1e-3, help='Learning rate')
     parser.add_argument('--epochs', type=int, default=15, help='Number of training epochs')
@@ -45,8 +45,8 @@ def main():
                     depth=depth, lr=args.lr, epochs=args.epochs, dropout=args.dropout)
         print(f"Train acc: {acc:.4f}")
     else:
-        acc = test(args.test_data_dir, model_path, args.model, depth=depth, dropout=args.dropout)
-        print(f"Test acc: {acc:.4f}")
+        acc, loss = test(args.test_data_dir, model_path, args.model, depth=depth, dropout=args.dropout)
+        print(f"Test acc: {acc:.4f}, Loss: {loss:.3f}")
 
 
 if __name__ == "__main__":
